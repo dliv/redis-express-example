@@ -1,10 +1,16 @@
 module.exports = ({ databaseType }) => {
   switch (databaseType) {
+    case 'memory': {
+      const Repository = require('./memory');
+      return new Repository();
+    }
     case 'redis': {
-      const redis = require('redis');
       const Repository = require('./redis');
-      const redisClient = redis.createClient();
-      return new Repository(redisClient);
+      return new Repository();
+    }
+    case 'sql': {
+      const Repository = require('./sql');
+      return new Repository();
     }
     default:
       throw new Error(`unknown databaseType: ${databaseType}`);

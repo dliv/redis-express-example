@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=development nodemon index",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:memory": "DB_TYPE=memory npm start",
+    "start:redis": "DB_TYPE=redis npm start",
+    "start:sql": "DB_TYPE=sql npm start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "mkdirp tmp"
   },
   "keywords": [],
   "author": "",
@@ -14,8 +18,11 @@
     "express": "4.17.1",
     "helmet": "3.20.1",
     "joi": "14.3.1",
+    "mkdirp": "0.5.1",
     "morgan": "1.9.1",
-    "redis": "2.8.0"
+    "redis": "2.8.0",
+    "sequelize": "5.18.0",
+    "sqlite3": "4.1.0"
   },
   "devDependencies": {
     "nodemon": "1.19.1"

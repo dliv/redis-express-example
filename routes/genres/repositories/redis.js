@@ -1,11 +1,11 @@
 const { promisify } = require('util');
+const redis = require('redis');
 
-const key = 'genres';
-
-class GenresRepository {
-  constructor(redisClient) {
+class GenresRedisRepository {
+  constructor(redisClient = redis.createClient(), key = 'genres') {
     this.logger = console;
     this.redisClient = redisClient;
+    this.key = key;
   }
 
   _handleDbError(err) {
@@ -16,7 +16,7 @@ class GenresRepository {
   async save(genre) {
     const add = promisify(this.redisClient.sadd).bind(this.redisClient);
     try {
-      const reply = await add(key, genre);
+      const reply = await add(this.key, genre);
       const isNew = Boolean(reply);
       return isNew;
     } catch (err) {
@@ -27,7 +27,7 @@ class GenresRepository {
   async findAll() {
     const members = promisify(this.redisClient.smembers).bind(this.redisClient);
     try {
-      const genres = await members(key);
+      const genres = await members(this.key);
       return genres || [];
     } catch (err) {
       this._handleDbError(err);
@@ -37,7 +37,7 @@ class GenresRepository {
   async isExisting(genre) {
     const ismember = promisify(this.redisClient.sismember).bind(this.redisClient);
     try {
-      const reply = await ismember(key, genre);
+      const reply = await ismember(this.key, genre);
       return Boolean(reply);
     } catch (err) {
       this._handleDbError(err);
@@ -47,11 +47,11 @@ class GenresRepository {
   async delete(genre) {
     const rem = promisify(this.redisClient.srem).bind(this.redisClient);
     try {
-      await rem(key, genre);
+      await rem(this.key, genre);
     } catch (err) {
       this._handleDbError(err);
     }
   }
 }
 
-module.exports = GenresRepository;
+module.exports = GenresRedisRepository;

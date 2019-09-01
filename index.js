@@ -4,7 +4,7 @@ const { beforeRoute, afterRoute } = require('./middleware');
 const genres = require('./routes/genres');
 
 const PORT = process.env.PORT || 3000;
-const DB_TYPE = process.env.DB_TYPE || 'redis';
+const DB_TYPE = process.env.DB_TYPE || 'memory';
 
 const app = express();
 
